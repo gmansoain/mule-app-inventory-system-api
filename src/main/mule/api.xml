@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <apikit:config name="raml-inventory-system-api-config" api="raml-inventory-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="raml-inventory-system-api-main">
+        <http:listener config-ref="HTTP_Listener_config" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="raml-inventory-system-api-config" />
+        <error-handler ref="GON_APIKIT_Error_Handler" />
+    </flow>
+    <flow name="raml-inventory-system-api-console">
+        <http:listener config-ref="HTTP_Listener_config" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="raml-inventory-system-api-config" />
+        <error-handler ref="GON_APIKIT_Error_Handler" />
+    </flow>
+    <flow name="put:\inventory\(inventory_id):application\json:raml-inventory-system-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="e5d91466-b5b7-49f6-9788-3e8fdcf8f134" name="UpdateInventoryById" />
+    </flow>
+    <flow name="delete:\inventory\(inventory_id):raml-inventory-system-api-config" doc:id="a85ab7f6-73dd-457a-8ac2-9399106dec1d">
+        <flow-ref doc:name="Flow Reference" doc:id="308aeb8d-73d9-4211-8c6c-6fb5fe574148" name="deleteInventoryById" />
+    </flow>
+    <flow name="get:\inventory:raml-inventory-system-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="2d9b64dc-7e50-4a79-a2a6-31cf5aa4d257" name="getAllInventoryItems" />
+    </flow>
+    <flow name="get:\inventory\(inventory_id):raml-inventory-system-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="b1a22204-37be-4758-aea9-fce173214c2c" name="getInventoryById" />
+    </flow>
+    <flow name="post:\inventory:application\json:raml-inventory-system-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="0565c8ef-9038-41a6-ac32-80c9ca8fff9d" name="createInventory" />
+    </flow>
+    <flow name="get:\inventory\products\(product_id):raml-inventory-system-api-config">
+        <flow-ref doc:name="Flow Reference" doc:id="00e58b3a-f8a1-4c7d-8a12-ca7ed56a06bf" name="getInventoryByProductId" />
+    </flow>
+</mule>

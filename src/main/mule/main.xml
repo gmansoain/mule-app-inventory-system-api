@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_TESTS" doc:name="HTTP Listener config" doc:id="32589586-3b05-45f0-a274-534c2c8e1ca2" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<flow name="getAllInventoryItems" doc:id="cb7e22bf-529f-4ee7-b1cf-988406136a2e" >
+		<logger level="INFO" doc:name="Logger" doc:id="5c4eab1a-4697-493e-a6e3-7d059824f02e" message="Received GET ALL INVENTORY ITEMS request"/>
+		<try doc:name="Try" doc:id="a6adf8f2-bf21-4165-a237-1c172fa73221">
+			<db:select doc:name="Select" doc:id="a4134236-1876-4399-b9a8-4691375c8a12" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM inventory;]]></db:sql>
+		</db:select>
+		</try>
+		<choice doc:name="Check response is not empty" doc:id="41a5f5f0-6b67-42b2-8854-b374a44784d1">
+				<when expression="#[sizeOf(payload) == 0]">
+					<raise-error doc:name="GON_DB: NO_RECORDS_FOUND_IN_GET_ALL" doc:id="7a932f8a-2289-4340-9daa-68d2c2f496d0" type="GON_DB: NO_RECORDS_FOUND_IN_GET_ALL" description="Finished GET ALL RECORDS Request WITH ERROR - No records found in the DB" />
+				</when>
+				<otherwise>
+					<logger level="INFO" doc:name="Logger" doc:id="f29c97d5-c0de-4807-872c-db2b74f33960" message="Finished GET ALL INVENTORY ITEMS request successfully" />
+					<ee:transform doc:name="Transform Message" doc:id="723e7bed-cc72-464c-aeb6-5393ca8de042">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+				</otherwise>
+			</choice>
+	</flow>
+	<flow name="getInventoryById" doc:id="1808a6b2-34d2-4e23-9228-274d3a62f5bb" >
+		<set-variable value="#[attributes.uriParams.inventory_id]" doc:name="inventory_id" doc:id="5807bcc7-5692-443e-89e6-244a1d5ede53" variableName="inventory_id"/>
+		<logger level="INFO" doc:name="Logger" doc:id="abea5321-7fb7-4330-98b8-08e908abb0e4" message="Received get Inventory by ID  request: Inventory_id: #[vars.inventory_id]"/>
+		<try doc:name="Try" doc:id="7053af87-0d74-4474-83f2-d8f1e6f27857">
+			<db:select doc:name="Select" doc:id="e541648a-ea7c-4ba5-bba0-2cec38e98d74" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM inventory WHERE inventory_id = :inventory_id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	inventory_id: attributes.uriParams.inventory_id
+}]]]></db:input-parameters>
+		</db:select>
+		</try>
+		<choice doc:name="Check response is not empty" doc:id="23b9eb91-12a5-453c-8811-5901254b59ed">
+				<when expression="#[sizeOf(payload) == 0]">
+					<raise-error doc:name="GON_DB: NO_RECORDS_FOUND_IN_GET_BY_ID" doc:id="4d55b557-1322-432d-a495-eec97da29f6c" type="GON_DB: NO_RECORDS_FOUND_IN_GET_BY_ID" description="Finished GET RECORD BY ID request WITH ERROR - No records found in the DB at inventory_id" />
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Transform Message" doc:id="489916e1-3daa-470b-9572-54ead8192324">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+					<logger level="INFO" doc:name="Logger" doc:id="24075f03-cb07-49ca-ba03-10078fdf9ae0" message="Finished GET Inventory by ID request successfully: inventory_id: #[vars.inventory_id]. #[payload]" />
+				</otherwise>
+			</choice>
+	</flow>
+	<flow name="getInventoryByProductId" doc:id="ca3be704-4aad-4c91-ab5a-78fafcb87743" >
+		<set-variable value="#[attributes.uriParams.product_id]" doc:name="product_id" doc:id="a13b8c43-3e7f-4aac-9f99-7e3820b892d1" variableName="product_id"/>
+		<logger level="INFO" doc:name="Logger" doc:id="b54e8c38-5a96-45ac-a748-666c7ed3b371" message="Received get Inventory by product ID request: product_id: #[vars.product_id]"/>
+		<try doc:name="Try" doc:id="84c0beb2-ca73-4377-aa54-f12b4a04eb49" >
+			<db:select doc:name="Select" doc:id="5930678b-2a26-4e56-96f1-f2e37bf68bb6" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM inventory WHERE product_id = :product_id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	product_id: attributes.uriParams.product_id
+}]]]></db:input-parameters>
+		</db:select>
+		</try>
+		<choice doc:name="Check response is not empty" doc:id="3acb1411-83dc-40e8-9e3a-ea71f0abdd62">
+				<when expression="#[sizeOf(payload) == 0]">
+					<raise-error doc:name="GON_DB: NO_RECORDS_FOUND_IN_GET_BY_PRODUCT_ID" doc:id="9b34c0e7-25be-4136-a04d-6874601b324d" type="GON_DB: NO_RECORDS_FOUND_IN_GET_BY_PRODUCT_ID" description="No records found in the DB at product_id" />
+				</when>
+				<otherwise>
+					<ee:transform doc:name="Transform Message" doc:id="e047f923-98bd-4bd6-b0a2-9359483cd96f">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+					<logger level="INFO" doc:name="Logger" doc:id="b7444e0f-4700-4737-a0c2-2484d08bbb82" message="Finished GET Inventory by product ID request successfully: product_id: #[vars.product_id]. Payload: #[payload]" />
+				</otherwise>
+			</choice>
+	</flow>
+	
+	<flow name="createInventory" doc:id="36708b93-5ed0-4c67-a235-d65366437208" >
+		<set-variable value="#[payload.product_id]" doc:name="Set Variable" doc:id="2fe3c513-ed16-43d9-b90f-cd31b084c97c" variableName="product_id"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3bc7deec-ddd1-4be6-afce-a9ae6e3cebe3" message="Inserting inventory item into database: product_id = #[vars.product_id]"/>
+		<try doc:name="Try" doc:id="d2bafec6-fbeb-49c7-8804-51c0e5a2c1fa" >
+			<db:insert doc:name="Insert" doc:id="fd150d45-ce2e-4d5d-95c6-d43533f05eb1" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO inventory (product_id, quantity, last_restock_date)
+VALUES (:product_id, :quantity, :last_restock_date)]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	product_id: payload.product_id,
+	quantity: payload.quantity,
+	last_restock_date: payload.last_restock_date
+}]]]></db:input-parameters>
+		</db:insert>
+		</try>
+		<choice doc:name="Check Number of records created &gt; 0" doc:id="9b66162b-5dcd-4f81-932c-ce79e566ed10" >
+			<when expression="#[payload.affectedRows == 0]">
+				<raise-error doc:name="GON_DB: NO_RECORD_CREATED" doc:id="2dfbc2f4-8acb-4b22-9641-9d453fe908e4" type="GON_DB: NO_RECORD_CREATED" description="Finished CREATE RECORD Request WITH ERROR - No records created"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="1610c299-77a8-4d4b-a686-496a58ed45ae" message="Finished inserting inventory item successfully into database: product_id = #[vars.product_id]" />
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	responseStatus: "201",&#10;	responseMessage: "Inventory item successfully created"&#10;}]' doc:name="Set Payload" doc:id="62f2999d-a22d-4760-80d0-a880a69b5802" />
+				<set-variable value="201" doc:name="Set httpStatus to 201" doc:id="09d5a8c8-bf1d-4055-997c-73bec9d7bc44" variableName="httpStatus"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="UpdateInventoryById" doc:id="eb5a9337-855a-4070-8be9-be4a27f120f5" >
+		<set-variable value="#[attributes.uriParams.inventory_id]" doc:name="inventory_id" doc:id="3fb90091-05dc-4d14-bb1d-fe177b19ee66" variableName="inventory_id"/>
+		<logger level="INFO" doc:name="Received UPDATE INVENTORY Request" doc:id="bae0273e-fbdd-44c0-9fe4-4948b1698214" message="Received UPDATE INVENTORY item Request. inventory_id: #[vars.inventory_id]"/>
+		<try doc:name="Try" doc:id="22a394c6-92e5-4a3a-ba76-8439ce195019" >
+			<db:update doc:name="Update" doc:id="06f121f1-c095-4047-a324-e1140f2825e7" config-ref="Database_Config">
+			<db:sql><![CDATA[UPDATE inventory
+SET quantity = :quantity,
+	last_restock_date = :last_restock_date
+WHERE inventory_id = :inventory_id]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	inventory_id: attributes.uriParams.inventory_id,
+	quantity: payload.quantity,
+	last_restock_date: payload.last_restock_date
+}]]]></db:input-parameters>
+		</db:update>
+		</try>
+		<choice doc:name="Check Number of records updated &gt; 0" doc:id="6354ecaa-2473-41ca-ada5-8d6804b1b36c" >
+			<when expression="#[payload.affectedRows == 0]">
+				<raise-error doc:name="GON_DB: NO_RECORD_UPDATED" doc:id="135f9123-fd9c-4751-8976-56562cb7f3cf" type="GON_DB: NO_RECORD_UPDATED" description="Finished UPDATE BY ID Request WITH ERROR - No records found in the DB at record_id"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Finished UPDATE inventory Request" doc:id="1b7b40d4-1a00-4a50-96f3-57f56231ccf3" message="Finished UPDATE INVENTORY Request successfully. inventory_id: #[vars.inventory_id]" />
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"responseStatus": "201",&#10;	"responseMessage": "Inventory item successfully updated at inventory_id = " ++ vars.inventory_id as String&#10;}]' doc:name="Set Payload" doc:id="48011057-cad1-429e-b92f-8d47df2eae66" />
+				<set-variable value="201" doc:name="Set httpStatus to 201" doc:id="38f47f17-e919-4fe5-a7f3-8c12823b9907" variableName="httpStatus"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="deleteInventoryById" doc:id="4323595a-1ed2-48b7-87d6-0051c1d31ae3" >
+		<set-variable value="#[attributes.uriParams.inventory_id]" doc:name="inventory_id" doc:id="aa1ec739-ccdd-4ed4-85dc-5ab554d1cff9" variableName="inventory_id"/>
+		<logger level="INFO" doc:name="Logger" doc:id="60004ac6-1301-4f9b-b63c-9447c8bb4b6f" message="Received DELETE Inventory request: inventory_id: #[vars.inventory_id]"/>
+		<try doc:name="Try" doc:id="8bcc1273-11ad-4b0b-8e76-268c1b2b0539" >
+			<db:delete doc:name="Delete" doc:id="cac8fab6-605d-4cb1-aef4-c5fcb4aa6c4b" config-ref="Database_Config">
+			<db:sql><![CDATA[DELETE FROM inventory
+WHERE inventory_id = :inventory_id;]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	inventory_id: attributes.uriParams.inventory_id
+}]]]></db:input-parameters>
+		</db:delete>
+		</try>
+		<choice doc:name="Verify Item exists" doc:id="2de15eb9-d91c-43a3-a456-5177772ebac8">
+			<when expression="#[payload == 1]">
+				<logger level="INFO" doc:name="Logger" doc:id="236d1c8a-db80-445c-a8b0-9571d415eaed" message="Finished DELETE inventory request successfully: inventory_id: #[vars.inventory_id]" />
+				<set-payload value='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"responseStatus": "201",&#10;	"responseMessage": "Inventory item successfully deleted",&#10;	"inventory_id": vars.inventory_id&#10;}]' doc:name="Set Payload" doc:id="020cf909-b453-42ba-b279-1097f5f037e5" />
+				<set-variable value="204" doc:name="Set httpStatus to 204" doc:id="550b246b-ed3a-4517-96e8-0ad0f591a2d6" variableName="httpStatus"/>
+			</when>
+			<otherwise>
+				<raise-error doc:name="GON_DB:DELETE_NO_RECORDS" doc:id="3c94ada8-020f-4ed9-be83-a180c4b89991" type="GON_DB:DELETE_NO_RECORDS" description="Item not found in DELETE RECORD by ID Request. Invalid Record ID" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

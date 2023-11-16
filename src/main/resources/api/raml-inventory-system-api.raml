@@ -1,0 +1,68 @@
+#%RAML 1.0
+title: Inventory System API
+version: v1
+mediaType: 
+- application/json
+
+uses: 
+  common: /exchange_modules/fc9e3283-a489-4e88-99aa-cceea4aa5ea1/gon-common-api-fragments/1.0.4/gon-common-api-fragments.raml
+
+types:
+  Inventory: !include exchange_modules/fc9e3283-a489-4e88-99aa-cceea4aa5ea1/online-store-api-fragments/1.0.2/datatypes/Inventory.raml
+  InventoryNoID: !include exchange_modules/fc9e3283-a489-4e88-99aa-cceea4aa5ea1/online-store-api-fragments/1.0.2/datatypes/InventoryNoID.raml
+
+/inventory:
+  get:
+    is: [common.client-id-required, common.error-responses]
+    description: Retrieve a list of inventory items
+    responses:
+      200:
+        body:
+          type: Inventory[]
+
+  post:
+    is: [common.client-id-required, common.error-responses]
+    description: Add a new inventory item
+    body:
+      type: InventoryNoID
+    responses:
+      201:
+        description: Inventory item added successfully
+
+/inventory/{inventory_id}:
+  get:
+    is: [common.client-id-required, common.error-responses]
+    description: Retrieve details of a specific inventory item
+    responses:
+      200:
+        body:
+          type: Inventory
+
+  put:
+    is: [common.client-id-required, common.error-responses]
+    description: Update details of a specific inventory item
+    body:
+      application/json:
+        example: |
+          {
+            "quantity": 110,
+            "last_restock_date": "2023-08-15"
+          }
+    responses:
+      200:
+        description: Inventory item updated successfully
+
+  delete:
+    is: [common.client-id-required, common.error-responses]
+    description: Delete a specific inventory item
+    responses:
+      204:
+        description: Inventory item deleted successfully
+
+/inventory/products/{product_id}:
+  get:
+    is: [common.client-id-required, common.error-responses]
+    responses:
+      200:
+        body:
+          type: Inventory

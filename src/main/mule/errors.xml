@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="GON_DB_Error_Handler" doc:id="cbd27a7f-9dc2-4ab8-a23b-71cefdb8d9a5" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f61e57ec-a57e-4af0-ab65-c1fd60e1e472" type="DB:BAD_SQL_SYNTAX, DB:CONNECTIVITY, DB:QUERY_EXECUTION">
+			<logger level="INFO" doc:name="ERROR IN DB - No connectivity to DB Server" doc:id="732201a2-c59d-4fa1-ad69-91ddf92ff8c4" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]' />
+			<set-variable value="500" doc:name="Set httpStatus to 500" doc:id="eb412c42-b816-4b54-aaa2-0bcbd9b912ca" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="a5dbd4c1-f409-405c-be0a-f2e9b3278ede" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.db.error-code-500'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1b472adb-6db2-49cd-b624-871bdb9fd05c" type="GON_DB:DELETE_NO_RECORDS">
+			<logger level="INFO" doc:name="Logger" doc:id="2591cef5-69bf-4f43-9180-4e172c5bae60" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="334e91d2-99d9-4e29-8356-01d1f78ed339" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="4b63bc95-c936-4f80-be30-c8c0f0390841" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-404'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1b12de2d-bd73-45ef-b5ae-24c16416bbbc" type="GON_DB: NO_RECORDS_FOUND_IN_GET_ALL">
+			<logger level="INFO" doc:name="ERROR IN DB - No records found" doc:id="5cd62dc4-5f80-40c8-8d4f-024d06c67ae9" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="6e5da7d3-1d97-4160-8fde-52614ebfab64" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="05bdaf06-13ef-4555-b0d5-d794875b7146" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-404'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="41a5c77b-ebab-4bf1-972b-b9ec7e770bfa" type="GON_DB: NO_RECORDS_FOUND_IN_GET_BY_ID">
+			<logger level="INFO" doc:name="ERROR IN DB - No records found at inventory_id" doc:id="4bf44713-e62a-422c-9f66-eb29adba6b35" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="e425a32f-0e1a-4ff1-a99d-73d153f0e99c" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="9ad77f5f-1faa-4472-9cb0-3f03edcefd7b" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-404'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="adc8ec83-a56c-4b6f-b4db-0b92b2d58b6e" type="GON_DB: NO_RECORDS_FOUND_IN_GET_BY_PRODUCT_ID">
+			<logger level="INFO" doc:name="ERROR IN DB - No records found at product_id" doc:id="dbe3d39f-1ffe-46db-b5ab-532a5ec2069d" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="760ab58c-d539-4220-b23e-0c66257948e2" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="6e1eabaa-86a3-4bdc-8e8a-12c0fe2b8a83" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-404'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="98649bda-71df-4000-a641-bfe48115a718" type="GON_DB: NO_RECORD_CREATED">
+			<logger level="INFO" doc:name="ERROR IN DB - No record created" doc:id="303e6fa4-eb6c-4d05-a311-e6103084d51a" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="400" doc:name="Set httpStatus to 400" doc:id="5770a174-4006-454e-9b9c-0e68963b804c" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="8021e7d3-abd9-4aa9-97c3-35f2f6d19f55" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-400'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="eec833d9-f251-4a40-979a-9139f3964947" type="GON_DB: NO_RECORD_UPDATED">
+			<logger level="INFO" doc:name="ERROR IN DB - No record updated" doc:id="09d5fa0c-6d53-426e-9a84-19203920a2ec" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="c54aeb19-062a-43b8-aaa2-66f35dff2b39" variableName="httpStatus"/>
+			<ee:transform doc:name="Transform Message" doc:id="c090ef45-30df-4790-91bc-99e8cb25ccc9" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-404'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="GON_APIKIT_Error_Handler">
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <logger level="INFO" doc:name="Logger" doc:id="25b4168c-56a5-4193-b67e-7711178fd43b" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="400" doc:name="Set httpStatus to 400" doc:id="720f1983-969e-4ffc-9bd7-2c9fb378c150" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message" doc:id="a5be728e-50a3-4c1d-9af2-577669f71d1c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-400'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <logger level="INFO" doc:name="Logger" doc:id="bc8970a2-d950-4f4c-a3d3-a625cac941f9" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="404" doc:name="Set httpStatus to 404" doc:id="e546a4ef-cf61-4c08-b62e-8af5a5189311" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-404'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <logger level="INFO" doc:name="Logger" doc:id="3d57721f-77f9-41f6-b82b-2b1de0f08c46" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="405" doc:name="Set httpStatus to 405" doc:id="55a0cc6a-3531-44cb-8841-56365ae6083d" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-405'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <logger level="INFO" doc:name="Logger" doc:id="18c4f3b1-e446-4494-8d67-c845fb571fe7" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="406" doc:name="Set httpStatus to 406" doc:id="07a75622-6a02-4d26-9df7-1f7496770df9" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-406'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <logger level="INFO" doc:name="Logger" doc:id="7f03f966-cb0b-4a01-9472-22796cb4b29a" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="415" doc:name="Set httpStatus to 415" doc:id="7bb1a381-85e2-4a14-a124-d0ea90cdd1ee" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-415'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <logger level="INFO" doc:name="Logger" doc:id="abec951a-be0f-4d8a-97e6-af036aea064a" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10; 	attributes: attributes,&#10; 	error:&#10;		errorType: error.errorType default "",&#10;		description: error.description default "",&#10;		detailedDescription: error.detailedDescription default "",&#10;}]'/>
+			<set-variable value="501" doc:name="Set httpStatus to 501" doc:id="0cb823e6-d2a6-4655-beeb-0485159ced09" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-501'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a008b0ee-8883-438c-a535-14264f8dac7f" type="ANY">
+			<logger level="INFO" doc:name="Logger" doc:id="3961f13e-4bc2-43e1-8bd2-5ab8bf2b1b8a" />
+			<set-variable value="500" doc:name="Set httpStatus to 500" doc:id="e53a0e1e-3d42-44f3-92ba-7448b6cdb243" variableName="httpStatus"/>
+			<ee:transform doc:name="Error Message" doc:id="48df87df-ddba-400a-99f1-f02d6f58d195" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorCode": p('errors.error-code-500'),
+  	"errorMessage": error.description,
+  	"transactionId": correlationId,
+  	"timeStamp": now()
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+		</on-error-propagate>
+        </error-handler></mule>

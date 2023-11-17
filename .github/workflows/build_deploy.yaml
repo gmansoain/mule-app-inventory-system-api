@@ -30,8 +30,16 @@ jobs:
         MULE_CLIENT_ID: ${{ secrets.MULE_CLIENT_ID }}
         MULE_CLIENT_SECRET: ${{ secrets.MULE_CLIENT_SECRET }}
         MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
+        SECURE_KEY: ${{ secrets.SECURE_KEY }}
         client_id: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
         client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
+        environment: "Production"
+        target: "GON-PS"
+        api_id: "19098188"
+        replicas: "1"
+        cores: "0.1"
+        api_layer: "System"
+        app_env: "prod"
       run: mvn clean -B deploy -DmuleDeploy -s .maven/settings.xml
 
           

@@ -21,10 +21,10 @@ jobs:
         anypoint.platform.client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
         environment: "Production"
         target: "GON-PS"
-        api.id: "19098188"
+        api_id: "19098188"
         replicas: "1"
         cores: "0.1"
-        api.layer: "System"
+        api_layer: "System"
         app_env: "prod"
       run: mvn clean -B deploy -s .maven/settings.xml
   deployToCloudhub:
@@ -43,9 +43,9 @@ jobs:
         anypoint.platform.client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
         environment: "Production"
         target: "GON-PS"
-        api.id: "19098188"
+        api_id: "19098188"
         replicas: "1"
         cores: "0.1"
-        api.layer: "System"
+        api_layer: "System"
         app_env: "prod"
       run: mvn clean -B deploy -DmuleDeploy -s .maven/settings.xml

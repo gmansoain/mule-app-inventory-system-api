@@ -30,8 +30,8 @@ jobs:
         MULE_CLIENT_ID: ${{ secrets.MULE_CLIENT_ID }}
         MULE_CLIENT_SECRET: ${{ secrets.MULE_CLIENT_SECRET }}
         MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
-        anypoint.platform.client_id: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
-        anypoint.platform.client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
+        client_id: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
+        client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
       run: mvn clean -B deploy -DmuleDeploy -s .maven/settings.xml
 
           

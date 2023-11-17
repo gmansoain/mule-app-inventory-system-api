@@ -4,7 +4,7 @@
     
     <groupId>fc9e3283-a489-4e88-99aa-cceea4aa5ea1</groupId>
     <artifactId>mule-inventory-system-api</artifactId>
-    <version>1.0.16</version>
+    <version>1.0.17</version>
     <packaging>mule-application</packaging>
     
     <name>inventory-system-api</name>
@@ -80,8 +80,8 @@
                         <secureProperties>
                             <api.id>19098188</api.id>
                             <secure.key>Mule1234</secure.key>
-                            <anypoint.platform.client_id>${env.anypoint.platform.client_id}</anypoint.platform.client_id>
-                            <anypoint.platform.client_secret>${env.anypoint.platform.client_secret}</anypoint.platform.client_secret>
+                            <anypoint.platform.client_id>${env.client_id}</anypoint.platform.client_id>
+                            <anypoint.platform.client_secret>${env.client_secret}</anypoint.platform.client_secret>
                         </secureProperties>
                     </cloudhub2Deployment>
                     <classifier>mule-application</classifier>

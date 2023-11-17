@@ -4,7 +4,7 @@
     
     <groupId>fc9e3283-a489-4e88-99aa-cceea4aa5ea1</groupId>
     <artifactId>mule-inventory-system-api</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
     <packaging>mule-application</packaging>
     
     <name>inventory-system-api</name>
@@ -57,20 +57,20 @@
                         <uri>https://anypoint.mulesoft.com </uri>
                         <provider>MC</provider>
                         <businessGroupId>${env.MULE_ORG_ID}</businessGroupId>
-                        <environment>${env.environment}</environment>
-                        <target>${env.target}</target>
+                        <environment>Production</environment>
+                        <target>GON-PS</target>
                         <muleVersion>4.4.0</muleVersion>
                         <connectedAppClientId>${env.MULE_CLIENT_ID}</connectedAppClientId>
                         <connectedAppClientSecret>${env.MULE_CLIENT_SECRET}</connectedAppClientSecret>
                         <connectedAppGrantType>client_credentials</connectedAppGrantType>
                         <applicationName>${project.name}</applicationName>
-                        <replicas>${env.replicas}</replicas>
-                        <vCores>${env.cores}</vCores>
+                        <replicas>1</replicas>
+                        <vCores>0.1</vCores>
                         <properties>
                             <anypoint.platform.config.analytics.agent.enabled>true</anypoint.platform.config.analytics.agent.enabled>
                             <anypoint.platform.visualizer.displayName>${project.name}</anypoint.platform.visualizer.displayName>
-                            <anypoint.platform.visualizer.layer>${env.api_layer}</anypoint.platform.visualizer.layer>
-                            <env>${env.app_env}</env>
+                            <anypoint.platform.visualizer.layer>System</anypoint.platform.visualizer.layer>
+                            <env>prod</env>
                         </properties>
                         <deploymentSettings>
                             <lastMileSecurity>false</lastMileSecurity>
@@ -78,10 +78,10 @@
                             <generateDefaultPublicUrl>true</generateDefaultPublicUrl>
                         </deploymentSettings>
                         <secureProperties>
-                            <api.id>${env.api_id}</api.id>
-                            <secure.key>${env.SECURE_KEY}</secure.key>
-                            <anypoint.platform.client_id>${env.ANYPOINT_PLATFORM_CLIENT_ID}</anypoint.platform.client_id>
-                            <anypoint.platform.client_secret>${env.ANYPOINT_PLATFORM_CLIENT_SECRET}</anypoint.platform.client_secret>
+                            <api.id>19098188</api.id>
+                            <secure.key>Mule1234</secure.key>
+                            <anypoint.platform.client_id>6cf41b1f668642ed971f4c9268e440b9</anypoint.platform.client_id>
+                            <anypoint.platform.client_secret>5f10d50bc9EC44F08F51b736Ec837d3D</anypoint.platform.client_secret>
                         </secureProperties>
                     </cloudhub2Deployment>
                     <classifier>mule-application</classifier>

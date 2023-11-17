@@ -1,0 +1,11 @@
+{
+  "modelVersion": "1.0.0",
+  "name": "inventory-system-api",
+  "description": "",
+  "version": "1.0.12",
+  "source": "file:///Users/gonzalo.marcos/AnypointStudio/ps-demo/inventory-system-api/pom.xml",
+  "natures": [
+    "mule"
+  ],
+  "components": []
+}

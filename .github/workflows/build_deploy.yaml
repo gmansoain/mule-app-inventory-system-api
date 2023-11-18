@@ -70,13 +70,13 @@ jobs:
         SECURE_KEY: ${{ secrets.SECURE_KEY }}
         client_id: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
         client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
-        environment: "Production"
-        target: "GON-PS"
-        api_id: "19098188"
-        replicas: "1"
-        cores: "0.1"
-        api_layer: "System"
-        app_env: "prod"
+        environment: ${{ vars.ENVIRONMENT }}
+        target: ${{ vars.TARGET }}
+        api_id: ${{ vars.API_ID }}
+        replicas: ${{ vars.REPLICAS }}
+        cores: ${{ vars.CORES }}
+        api_layer: ${{ vars.API_LAYER }}
+        app_env: ${{ vars.APP_ENV }}
       run: |
         artifactName=$(ls *.jar | head -1)
         mvn clean -B deploy -DmuleDeploy -Dmule.artifact=$artifactName \

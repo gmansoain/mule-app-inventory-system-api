@@ -4,7 +4,7 @@
     
     <groupId>fc9e3283-a489-4e88-99aa-cceea4aa5ea1</groupId>
     <artifactId>mule-inventory-system-api</artifactId>
-    <version>1.0.22</version>
+    <version>1.0.23</version>
     <packaging>mule-application</packaging>
     
     <name>inventory-system-api</name>
@@ -63,7 +63,7 @@
                         <connectedAppClientId>${env.MULE_CLIENT_ID}</connectedAppClientId>
                         <connectedAppClientSecret>${env.MULE_CLIENT_SECRET}</connectedAppClientSecret>
                         <connectedAppGrantType>client_credentials</connectedAppGrantType>
-                        <applicationName>${project.name}</applicationName>
+                        <applicationName>${project.name}-${env.app_env}</applicationName>
                         <replicas>${env.replicas}</replicas>
                         <vCores>${env.cores}</vCores>
                         <properties>

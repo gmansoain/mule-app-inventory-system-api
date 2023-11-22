@@ -85,7 +85,7 @@ jobs:
         -s .maven/settings.xml
 
   testAPI:
-    needs: buildAndPublishToExchange
+    needs: deployToCloudhub
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

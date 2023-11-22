@@ -15,17 +15,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-    - uses: actions/download-artifact@v3
-      with:
-        name: artifacts
-
     - name: Deploy to Cloudhub PROD
       env:
         MULE_CLIENT_ID: ${{ secrets.MULE_CLIENT_ID }}
@@ -42,7 +31,5 @@ jobs:
         api_layer: ${{ vars.API_LAYER }}
         app_env: ${{ vars.APP_ENV }}
       run: |
-        artifactName=$(ls *.jar | head -1)
-        mvn clean -B deploy -DmuleDeploy -Dmule.artifact=$artifactName \
-        -s .maven/settings.xml
+        mvn clean -B deploy -DmuleDeploy -s .maven/settings.xml
   

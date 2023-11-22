@@ -6,7 +6,7 @@ on:
     branches: [ feature ]
     
 jobs:
-  buildAndPublishToExchange:
+  build_And_Publish_To_Exchange:
     runs-on: ubuntu-latest
     environment: Development
     steps:
@@ -45,8 +45,8 @@ jobs:
           name: artifacts
           path: target/*.jar
   
-  deployToCloudhub:
-    needs: buildAndPublishToExchange
+  deploy_To_Dev:
+    needs: build_And_Publish_To_Exchange
     runs-on: ubuntu-latest
     environment: Development
     steps:
@@ -85,7 +85,7 @@ jobs:
         -s .maven/settings.xml
 
   testAPI:
-    needs: deployToCloudhub
+    needs: deploy_To_Dev
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

@@ -1,0 +1,48 @@
+name: Deploy to Prod
+
+# Controls when the workflow will run
+on:
+  pull:
+    branches: [ master ]
+    
+  workflow_dispatch:
+  
+jobs:
+  deploy_to_Prod:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifacts
+
+    - name: Deploy to Cloudhub PROD
+      env:
+        MULE_CLIENT_ID: ${{ secrets.MULE_CLIENT_ID }}
+        MULE_CLIENT_SECRET: ${{ secrets.MULE_CLIENT_SECRET }}
+        MULE_ORG_ID: ${{ secrets.MULE_ORG_ID }}
+        SECURE_KEY: ${{ secrets.SECURE_KEY }}
+        client_id: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_ID }}
+        client_secret: ${{ secrets.ANYPOINT_PLATFORM_CLIENT_SECRET }}
+        environment: ${{ vars.ENVIRONMENT }}
+        target: ${{ vars.TARGET }}
+        api_id: ${{ vars.API_ID }}
+        replicas: ${{ vars.REPLICAS }}
+        cores: ${{ vars.CORES }}
+        api_layer: ${{ vars.API_LAYER }}
+        app_env: ${{ vars.APP_ENV }}
+      run: |
+        artifactName=$(ls *.jar | head -1)
+        mvn clean -B deploy -DmuleDeploy -Dmule.artifact=$artifactName \
+        -s .maven/settings.xml
+  

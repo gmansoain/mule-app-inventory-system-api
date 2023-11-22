@@ -49,4 +49,4 @@ jobs:
     # Run tests
     - name: Run tests
       run: |
-        newman run postman/testing/dev/inventory-sapi-dev-testing-collection.json -e postman/testing/dev/inventory-sapi-dev-testing-environment.json   
+        newman run postman/testing/prod/inventory-sapi-prod-testing-collection.json -e postman/testing/prod/inventory-sapi-prod-testing-environment.json   

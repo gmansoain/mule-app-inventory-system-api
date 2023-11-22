@@ -1,0 +1,255 @@
+{
+	"info": {
+		"_postman_id": "82644392-b77a-4d4d-b421-55515997cb1b",
+		"name": "GON Inventory System API - DEV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3257783",
+		"_collection_link": "https://vidsigneritequia.postman.co/workspace/GON-Mule~3af5d665-c687-4d45-85e6-35c2c50ef956/collection/3257783-82644392-b77a-4d4d-b421-55515997cb1b?action=share&source=collection_link&creator=3257783"
+	},
+	"item": [
+		{
+			"name": "GET All Inventory Items",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Inventory By ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory/1",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"1"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Inventory By Product ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"console.log(data[0].inventory_id);",
+							" // Set the environment variable",
+							"pm.environment.set('test-inventory-item-id', data[0].inventory_id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{inventory-sapi}}/api/inventory/products/333",
+					"protocol": "http",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"products",
+						"333"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE Inventory Item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"product_id\": 333,\n  \"quantity\": 2002,\n  \"last_restock_date\": \"2023-07-20\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE Inventory By ID",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": 999,\n  \"last_restock_date\": \"2023-08-15\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory/{{test-inventory-item-id}}",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"{{test-inventory-item-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Inventory By ID",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory/{{test-inventory-item-id}}",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"{{test-inventory-item-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HEALTH - Readiness",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/ready",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"ready"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

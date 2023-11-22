@@ -1,0 +1,401 @@
+{
+	"info": {
+		"_postman_id": "82644392-b77a-4d4d-b421-55515997cb1b",
+		"name": "GON Inventory System API - DEV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3257783",
+		"_collection_link": "https://vidsigneritequia.postman.co/workspace/GON-Mule~3af5d665-c687-4d45-85e6-35c2c50ef956/collection/3257783-82644392-b77a-4d4d-b421-55515997cb1b?action=share&source=collection_link&creator=3257783"
+	},
+	"item": [
+		{
+			"name": "HEALTH - Readiness",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Status is OK\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.status).to.eql(\"OK\");",
+							"});",
+							"",
+							"pm.test(\"Dependencies are UP\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.dependencies[0].status).to.eql(\"UP\");",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/ready",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"ready"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET All Inventory Items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Inventory By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Get inventory_id=1 correctly\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson[0].quantity).to.eql(100);",
+							"  pm.expect(responseJson[0].product_id).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory/1",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"1"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE Inventory Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Item created successfully\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.responseStatus).to.eql(\"201\");",
+							"  pm.expect(responseJson.responseMessage).to.eql(\"Inventory item successfully created\");",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"product_id\": 333,\n  \"quantity\": 2002,\n  \"last_restock_date\": \"2023-07-20\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Inventory By Product ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"console.log(data[0].inventory_id);",
+							" // Set the environment variable",
+							"pm.environment.set('test-inventory-item-id', data[0].inventory_id);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Assert last item created\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson[0].quantity).to.eql(2002);",
+							"  pm.expect(responseJson[0].last_restock_date).to.eql(\"2023-07-20T00:00:00\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{inventory-sapi}}/api/inventory/products/333",
+					"protocol": "http",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"products",
+						"333"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UPDATE Inventory By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Item modified successfully\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.responseStatus).to.eql(\"201\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": 999,\n  \"last_restock_date\": \"2023-08-15\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory/{{test-inventory-item-id}}",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"{{test-inventory-item-id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Inventory By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory/{{test-inventory-item-id}}",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory",
+						"{{test-inventory-item-id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

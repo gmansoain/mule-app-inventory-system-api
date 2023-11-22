@@ -2,7 +2,7 @@ name: Deploy to Prod
 
 # Controls when the workflow will run
 on:
-  pull:
+  pull_request:
     branches: [ master ]
     
   workflow_dispatch:
@@ -14,17 +14,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-    - uses: actions/download-artifact@v3
-      with:
-        name: artifacts
 
     - name: Deploy to Cloudhub PROD
       env:
@@ -42,7 +31,22 @@ jobs:
         api_layer: ${{ vars.API_LAYER }}
         app_env: ${{ vars.APP_ENV }}
       run: |
-        artifactName=$(ls *.jar | head -1)
-        mvn clean -B deploy -DmuleDeploy -Dmule.artifact=$artifactName \
-        -s .maven/settings.xml
-  
+        mvn clean -B deploy -DmuleDeploy -s .maven/settings.xml
+  testAPI:
+    needs: deploy_to_Prod
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    # Install Node on the runner
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    # Install Newman
+    - name: Install Newman
+      run: |
+        npm install -g newman
+        npm install -g newman-reporter-htmlextra
+    # Run tests
+    - name: Run tests
+      run: |
+        newman run postman/testing/prod/inventory-sapi-prod-testing-collection.json -e postman/testing/prod/inventory-sapi-prod-testing-environment.json   

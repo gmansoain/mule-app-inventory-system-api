@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "82644392-b77a-4d4d-b421-55515997cb1b",
-		"name": "GON Inventory System API - DEV",
+		"name": "GON Inventory System API - PROD",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "3257783",
 		"_collection_link": "https://vidsigneritequia.postman.co/workspace/GON-Mule~3af5d665-c687-4d45-85e6-35c2c50ef956/collection/3257783-82644392-b77a-4d4d-b421-55515997cb1b?action=share&source=collection_link&creator=3257783"

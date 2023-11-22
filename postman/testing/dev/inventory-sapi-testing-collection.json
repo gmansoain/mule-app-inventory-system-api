@@ -9,6 +9,34 @@
 	"item": [
 		{
 			"name": "HEALTH - Readiness",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 2 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+							"});",
+							"",
+							"pm.test(\"Status is OK\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.status).to.eql(\"OK\");",
+							"});",
+							"",
+							"pm.test(\"Dependencies are UP\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.dependencies[0].status).to.eql(\"UP\");",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -27,6 +55,23 @@
 		},
 		{
 			"name": "GET All Inventory Items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -57,6 +102,29 @@
 		},
 		{
 			"name": "GET Inventory By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Get inventory_id=1 correctly\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson[0].quantity).to.eql(100);",
+							"  pm.expect(responseJson[0].product_id).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -95,6 +163,30 @@
 		},
 		{
 			"name": "CREATE Inventory Item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Item created successfully\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.responseStatus).to.eql(\"201\");",
+							"  pm.expect(responseJson.responseMessage).to.eql(\"Inventory item successfully created\");",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -144,7 +236,20 @@
 							"console.log(data[0].inventory_id);",
 							" // Set the environment variable",
 							"pm.environment.set('test-inventory-item-id', data[0].inventory_id);",
-							""
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Assert last item created\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson[0].quantity).to.eql(2002);",
+							"  pm.expect(responseJson[0].last_restock_date).to.eql(\"2023-07-20T00:00:00\");",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -182,6 +287,28 @@
 		},
 		{
 			"name": "UPDATE Inventory By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							"pm.test(\"Item modified successfully\", () => {",
+							"  const responseJson = pm.response.json();",
+							"  pm.expect(responseJson.responseStatus).to.eql(\"201\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [
@@ -222,6 +349,25 @@
 		},
 		{
 			"name": "DELETE Inventory By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 3 seconds\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [

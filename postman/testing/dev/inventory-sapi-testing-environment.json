@@ -16,7 +16,7 @@
 		},
 		{
 			"key": "inventory-sapi",
-			"value": "inventory-system-api-17ekvx.a671fi.gbr-e1.cloudhub.io/api",
+			"value": "inventory-system-api-17ekvx.a671fi.gbr-e1.cloudhub.io",
 			"type": "default",
 			"enabled": true
 		},

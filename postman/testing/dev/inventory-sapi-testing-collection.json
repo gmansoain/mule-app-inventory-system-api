@@ -8,6 +8,24 @@
 	},
 	"item": [
 		{
+			"name": "HEALTH - Readiness",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{inventory-sapi}}/ready",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"ready"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET All Inventory Items",
 			"request": {
 				"method": "GET",
@@ -76,6 +94,45 @@
 			"response": []
 		},
 		{
+			"name": "CREATE Inventory Item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "client_id",
+						"value": "{{client_id}}",
+						"type": "text"
+					},
+					{
+						"key": "client_secret",
+						"value": "{{client_secret}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"product_id\": 333,\n  \"quantity\": 2002,\n  \"last_restock_date\": \"2023-07-20\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{inventory-sapi}}/api/inventory",
+					"protocol": "https",
+					"host": [
+						"{{inventory-sapi}}"
+					],
+					"path": [
+						"api",
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET Inventory By Product ID",
 			"event": [
 				{
@@ -118,45 +175,6 @@
 						"inventory",
 						"products",
 						"333"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "CREATE Inventory Item",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "client_id",
-						"value": "{{client_id}}",
-						"type": "text"
-					},
-					{
-						"key": "client_secret",
-						"value": "{{client_secret}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"product_id\": 333,\n  \"quantity\": 2002,\n  \"last_restock_date\": \"2023-07-20\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{inventory-sapi}}/api/inventory",
-					"protocol": "https",
-					"host": [
-						"{{inventory-sapi}}"
-					],
-					"path": [
-						"api",
-						"inventory"
 					]
 				}
 			},
@@ -228,24 +246,6 @@
 						"api",
 						"inventory",
 						"{{test-inventory-item-id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "HEALTH - Readiness",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://{{inventory-sapi}}/ready",
-					"protocol": "https",
-					"host": [
-						"{{inventory-sapi}}"
-					],
-					"path": [
-						"ready"
 					]
 				}
 			},

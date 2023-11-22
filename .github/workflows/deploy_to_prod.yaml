@@ -32,4 +32,21 @@ jobs:
         app_env: ${{ vars.APP_ENV }}
       run: |
         mvn clean -B deploy -DmuleDeploy -s .maven/settings.xml
-  
+  testAPI:
+    needs: deploy_to_Prod
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    # Install Node on the runner
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    # Install Newman
+    - name: Install Newman
+      run: |
+        npm install -g newman
+        npm install -g newman-reporter-htmlextra
+    # Run tests
+    - name: Run tests
+      run: |
+        newman run postman/testing/dev/inventory-sapi-dev-testing-collection.json -e postman/testing/dev/inventory-sapi-dev-testing-environment.json   

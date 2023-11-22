@@ -63,7 +63,7 @@
                         <connectedAppClientId>${env.MULE_CLIENT_ID}</connectedAppClientId>
                         <connectedAppClientSecret>${env.MULE_CLIENT_SECRET}</connectedAppClientSecret>
                         <connectedAppGrantType>client_credentials</connectedAppGrantType>
-                        <applicationName>${project.name}-${env.app_name_suffix}</applicationName>
+                        <applicationName>${project.name}-${env.app_env}</applicationName>
                         <replicas>${env.replicas}</replicas>
                         <vCores>${env.cores}</vCores>
                         <properties>
